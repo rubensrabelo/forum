@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: forum
+  datasource:
+    url: jdbc:postgresql://db:5432/db_forum
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+  pattern:
+    console: '{"timestamp":"%d{yyyy-MM-dd HH:mm:ss}","level":"%p","service":"${spring.application.name}","message":"%m"}%n'
