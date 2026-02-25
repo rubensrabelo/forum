@@ -2,6 +2,8 @@ services:
   forum:
     build: .
     container_name: forum
+    ports:
+      - "8080:8080"
     depends_on:
       - db
     environment:
@@ -24,3 +26,10 @@ services:
       - postgres_forum_data:/var/lib/postgresql/data
     networks:
       - forum-network
+
+networks:
+  forum-network:
+    driver: bridge
+
+volumes:
+  postgres_forum_data:
