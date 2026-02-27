@@ -1,6 +1,8 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
 
+cd %~dp0..
+
 :MENU
 cls
 echo ============================================
