@@ -9,6 +9,7 @@ import io.github.rubensrabelo.project.forum.modules.user.domain.User;
 public interface IUserService {
 
     UserResponseDTO findById(long id);
+    User save(User user);
     UserResponseDTO udpate(long id, UserUpdateDTO data);
     Optional<User> findByEmail(String email);
     void delete(long id);

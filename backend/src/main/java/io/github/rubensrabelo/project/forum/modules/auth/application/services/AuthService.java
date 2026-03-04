@@ -1,7 +1,5 @@
 package io.github.rubensrabelo.project.forum.modules.auth.application.services;
 
-import java.util.Optional;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -9,63 +7,68 @@ import io.github.rubensrabelo.project.forum.modules.auth.application.dto.LoginRe
 import io.github.rubensrabelo.project.forum.modules.auth.application.dto.RegisterRequestDTO;
 import io.github.rubensrabelo.project.forum.modules.auth.application.dto.AuthResponseDTO;
 import io.github.rubensrabelo.project.forum.modules.auth.infra.security.TokenService;
+import io.github.rubensrabelo.project.forum.modules.user.application.services.IUserService;
 import io.github.rubensrabelo.project.forum.modules.user.domain.User;
-import io.github.rubensrabelo.project.forum.modules.user.infra.repositories.IUserRepository;
+import io.github.rubensrabelo.project.forum.shared.exceptions.InvalidCredentialsException;
+import io.github.rubensrabelo.project.forum.shared.exceptions.ResourceNotFoundException;
+import io.github.rubensrabelo.project.forum.shared.exceptions.UserAlreadyExistsException;
 
 @Service
 public class AuthService implements IAuthService {
 
-    private final IUserRepository repository;
+    private final IUserService userService;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
 
     public AuthService(
-            IUserRepository repository,
+            IUserService userService,
             PasswordEncoder passwordEncoder,
             TokenService tokenService) {
-        this.repository = repository;
+        this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.tokenService = tokenService;
     }
 
     @Override
-    public AuthResponseDTO login(LoginRequestDTO body) {
-        User user = repository.findByEmail(body.email())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public AuthResponseDTO login(LoginRequestDTO data) {
 
-        if (!passwordEncoder.matches(body.password(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+        User entity = userService.findByEmail(data.email())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (!passwordEncoder.matches(data.password(), entity.getPassword())) {
+            throw new InvalidCredentialsException();
         }
 
-        String token = tokenService.generate(user);
+        String token = tokenService.generate(entity);
 
-        return new AuthResponseDTO(
-                user.getFirstname(),
-                user.getLastname(),
-                token);
+        return buildResponse(entity, token);
     }
 
     @Override
-    public AuthResponseDTO register(RegisterRequestDTO body) {
-        Optional<User> user = repository.findByEmail(body.email());
+    public AuthResponseDTO register(RegisterRequestDTO data) {
 
-        if (user.isPresent()) {
-            throw new RuntimeException("User already exists");
+        if (userService.findByEmail(data.email()).isPresent()) {
+            throw new UserAlreadyExistsException(data.email());
         }
 
-        User newUser = new User();
-        newUser.setPassword(passwordEncoder.encode(body.password()));
-        newUser.setEmail(body.email());
-        newUser.setFirstname(body.firstname());
-        newUser.setLastname(body.lastname());
+        User user = new User();
+        user.setEmail(data.email());
+        user.setFirstname(data.firstname());
+        user.setLastname(data.lastname());
+        user.setPassword(passwordEncoder.encode(data.password()));
 
-        newUser = repository.save(newUser);
+        user = userService.save(user);
 
-        String token = tokenService.generate(newUser);
+        String token = tokenService.generate(user);
 
+        return buildResponse(user, token);
+    }
+
+    private AuthResponseDTO buildResponse(User user, String token) {
         return new AuthResponseDTO(
-                newUser.getFirstname(),
-                newUser.getLastname(),
-                token);
+                user.getFirstname(),
+                user.getLastname(),
+                token
+        );
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.github.rubensrabelo.project.forum.modules.user.application.dto.UserResponseDTO;
 import io.github.rubensrabelo.project.forum.modules.user.application.dto.UserUpdateDTO;
 import io.github.rubensrabelo.project.forum.modules.user.application.services.IUserService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
@@ -36,7 +37,7 @@ public class UserController {
         consumes = {MediaType.APPLICATION_JSON_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public ResponseEntity<UserResponseDTO> udpate(@PathVariable long id,  @RequestBody UserUpdateDTO data) {
+    public ResponseEntity<UserResponseDTO> udpate(@Valid @PathVariable long id,  @RequestBody UserUpdateDTO data) {
         UserResponseDTO response = service.udpate(id, data);
         return ResponseEntity.ok().body(response);
     }
