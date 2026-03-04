@@ -1,19 +1,19 @@
-package io.github.rubensrabelo.project.forum.modules.user.application.services;
+package io.github.rubensrabelo.project.forum.modules.auth.application.services;
 
 import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import io.github.rubensrabelo.project.forum.modules.user.application.dto.LoginRequestDTO;
-import io.github.rubensrabelo.project.forum.modules.user.application.dto.RegisterRequestDTO;
-import io.github.rubensrabelo.project.forum.modules.user.application.dto.ResponseDTO;
+import io.github.rubensrabelo.project.forum.modules.auth.application.dto.LoginRequestDTO;
+import io.github.rubensrabelo.project.forum.modules.auth.application.dto.RegisterRequestDTO;
+import io.github.rubensrabelo.project.forum.modules.auth.application.dto.ResponseDTO;
+import io.github.rubensrabelo.project.forum.modules.auth.infra.security.TokenService;
 import io.github.rubensrabelo.project.forum.modules.user.domain.User;
 import io.github.rubensrabelo.project.forum.modules.user.infra.repositories.IUserRepository;
-import io.github.rubensrabelo.project.forum.modules.user.infra.security.TokenService;
 
 @Service
-public class AuthService {
+public class AuthService implements IAuthService {
 
     private final IUserRepository repository;
     private final PasswordEncoder passwordEncoder;
@@ -28,6 +28,7 @@ public class AuthService {
         this.tokenService = tokenService;
     }
 
+    @Override
     public ResponseDTO login(LoginRequestDTO body) {
         User user = repository.findByEmail(body.email())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -44,6 +45,7 @@ public class AuthService {
                 token);
     }
 
+    @Override
     public ResponseDTO register(RegisterRequestDTO body) {
         Optional<User> user = repository.findByEmail(body.email());
 

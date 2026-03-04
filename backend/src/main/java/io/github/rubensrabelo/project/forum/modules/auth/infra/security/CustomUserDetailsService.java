@@ -1,4 +1,4 @@
-package io.github.rubensrabelo.project.forum.modules.user.infra.security;
+package io.github.rubensrabelo.project.forum.modules.auth.infra.security;
 
 import java.util.ArrayList;
 

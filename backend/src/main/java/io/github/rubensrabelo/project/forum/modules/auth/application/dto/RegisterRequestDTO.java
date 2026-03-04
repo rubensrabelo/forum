@@ -1,4 +1,4 @@
-package io.github.rubensrabelo.project.forum.modules.user.application.dto;
+package io.github.rubensrabelo.project.forum.modules.auth.application.dto;
 
 public record RegisterRequestDTO(
         String firstname,

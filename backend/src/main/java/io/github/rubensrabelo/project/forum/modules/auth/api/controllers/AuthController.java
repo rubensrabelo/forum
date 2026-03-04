@@ -1,20 +1,20 @@
-package io.github.rubensrabelo.project.forum.modules.user.api.controllers;
+package io.github.rubensrabelo.project.forum.modules.auth.api.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.github.rubensrabelo.project.forum.modules.user.application.dto.LoginRequestDTO;
-import io.github.rubensrabelo.project.forum.modules.user.application.dto.RegisterRequestDTO;
-import io.github.rubensrabelo.project.forum.modules.user.application.dto.ResponseDTO;
-import io.github.rubensrabelo.project.forum.modules.user.application.services.AuthService;
+import io.github.rubensrabelo.project.forum.modules.auth.application.dto.LoginRequestDTO;
+import io.github.rubensrabelo.project.forum.modules.auth.application.dto.RegisterRequestDTO;
+import io.github.rubensrabelo.project.forum.modules.auth.application.dto.ResponseDTO;
+import io.github.rubensrabelo.project.forum.modules.auth.application.services.IAuthService;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthService authService;
+    private final IAuthService authService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(IAuthService authService) {
         this.authService = authService;
     }
 
