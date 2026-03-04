@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import io.github.rubensrabelo.project.forum.modules.auth.application.dto.LoginRequestDTO;
 import io.github.rubensrabelo.project.forum.modules.auth.application.dto.RegisterRequestDTO;
-import io.github.rubensrabelo.project.forum.modules.auth.application.dto.ResponseDTO;
+import io.github.rubensrabelo.project.forum.modules.auth.application.dto.AuthResponseDTO;
 import io.github.rubensrabelo.project.forum.modules.auth.application.services.IAuthService;
 
 @RestController
@@ -19,12 +19,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseDTO> login(@RequestBody LoginRequestDTO body) {
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO body) {
         return ResponseEntity.ok(authService.login(body));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseDTO> register(@RequestBody RegisterRequestDTO body) {
+    public ResponseEntity<AuthResponseDTO> register(@RequestBody RegisterRequestDTO body) {
         return ResponseEntity.ok(authService.register(body));
     }
 }

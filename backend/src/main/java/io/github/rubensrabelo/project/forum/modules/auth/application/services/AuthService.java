@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import io.github.rubensrabelo.project.forum.modules.auth.application.dto.LoginRequestDTO;
 import io.github.rubensrabelo.project.forum.modules.auth.application.dto.RegisterRequestDTO;
-import io.github.rubensrabelo.project.forum.modules.auth.application.dto.ResponseDTO;
+import io.github.rubensrabelo.project.forum.modules.auth.application.dto.AuthResponseDTO;
 import io.github.rubensrabelo.project.forum.modules.auth.infra.security.TokenService;
 import io.github.rubensrabelo.project.forum.modules.user.domain.User;
 import io.github.rubensrabelo.project.forum.modules.user.infra.repositories.IUserRepository;
@@ -29,7 +29,7 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public ResponseDTO login(LoginRequestDTO body) {
+    public AuthResponseDTO login(LoginRequestDTO body) {
         User user = repository.findByEmail(body.email())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -39,14 +39,14 @@ public class AuthService implements IAuthService {
 
         String token = tokenService.generate(user);
 
-        return new ResponseDTO(
+        return new AuthResponseDTO(
                 user.getFirstname(),
                 user.getLastname(),
                 token);
     }
 
     @Override
-    public ResponseDTO register(RegisterRequestDTO body) {
+    public AuthResponseDTO register(RegisterRequestDTO body) {
         Optional<User> user = repository.findByEmail(body.email());
 
         if (user.isPresent()) {
@@ -63,7 +63,7 @@ public class AuthService implements IAuthService {
 
         String token = tokenService.generate(newUser);
 
-        return new ResponseDTO(
+        return new AuthResponseDTO(
                 newUser.getFirstname(),
                 newUser.getLastname(),
                 token);
