@@ -31,8 +31,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User save(User user) {
-        return repository.save(user);
+    public User save(User entity) {
+        return repository.save(entity);
     }
 
     @Override
