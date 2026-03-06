@@ -30,4 +30,5 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Run Unit Tests
+        working-directory: backend
         run: mvn test
