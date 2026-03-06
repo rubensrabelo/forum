@@ -7,21 +7,21 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import io.github.rubensrabelo.project.forum.modules.user.application.services.IUserService;
 import io.github.rubensrabelo.project.forum.modules.user.domain.User;
-import io.github.rubensrabelo.project.forum.modules.user.infra.repositories.IUserRepository;
 
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final IUserRepository repository;
+    private final IUserService service;
 
-    public CustomUserDetailsService(IUserRepository repository) {
-        this.repository = repository;
+    public CustomUserDetailsService(IUserService service) {
+        this.service = service;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = repository.findByEmail(username)
+        User user = service.findByEmail(username)
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         
         return new org.springframework.security.core.userdetails.User(

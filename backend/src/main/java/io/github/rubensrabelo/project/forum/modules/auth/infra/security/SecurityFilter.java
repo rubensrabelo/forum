@@ -9,8 +9,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.github.rubensrabelo.project.forum.modules.user.application.services.IUserService;
 import io.github.rubensrabelo.project.forum.modules.user.domain.User;
-import io.github.rubensrabelo.project.forum.modules.user.infra.repositories.IUserRepository;
+import io.github.rubensrabelo.project.forum.shared.exceptions.ResourceNotFoundException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,11 +21,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
-    private final IUserRepository userRepository;
+    private final IUserService userservice;
 
-    public SecurityFilter(TokenService tokenService, IUserRepository userRepository) {
+    public SecurityFilter(TokenService tokenService, IUserService userservice) {
         this.tokenService = tokenService;
-        this.userRepository = userRepository;
+        this.userservice = userservice;
     }
 
     @Override
@@ -35,8 +36,8 @@ public class SecurityFilter extends OncePerRequestFilter {
         var login = tokenService.validate(token);
 
         if (login != null) {
-            User user = userRepository.findByEmail(login)
-                    .orElseThrow(() -> new RuntimeException("User Not Found"));
+            User user = userservice.findByEmail(login)
+                    .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
             
             var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
             var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
