@@ -36,7 +36,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserResponseDTO udpate(long id, UserUpdateDTO data) {
+    public UserResponseDTO update(long id, UserUpdateDTO data) {
         User entity = repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 

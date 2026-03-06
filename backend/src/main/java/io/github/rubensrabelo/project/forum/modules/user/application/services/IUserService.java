@@ -10,7 +10,7 @@ public interface IUserService {
 
     UserResponseDTO findById(long id);
     User save(User entity);
-    UserResponseDTO udpate(long id, UserUpdateDTO data);
+    UserResponseDTO update(long id, UserUpdateDTO data);
     Optional<User> findByEmail(String email);
     void delete(long id);
 }

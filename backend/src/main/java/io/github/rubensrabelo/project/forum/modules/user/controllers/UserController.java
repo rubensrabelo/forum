@@ -38,7 +38,7 @@ public class UserController {
         produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public ResponseEntity<UserResponseDTO> udpate(@Valid @PathVariable long id,  @RequestBody UserUpdateDTO data) {
-        UserResponseDTO response = service.udpate(id, data);
+        UserResponseDTO response = service.update(id, data);
         return ResponseEntity.ok().body(response);
     }
 
